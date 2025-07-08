@@ -1,0 +1,19 @@
+# Dependencies
+/node_modules
+
+# WhatsApp Web JS session data
+/.wwebjs_auth/
+/.wwebjs_cache/
+/session/
+
+# Sensitive environment files
+serviceAccountKey.json
+config.json
+
+# IDE config files
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db 
