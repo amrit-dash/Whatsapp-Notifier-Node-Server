@@ -24,14 +24,15 @@ const io = socketIO(server, {
 });
 
 const port = 3001;
-app.use(cors());
-app.use(express.json());
 
-// Middleware to bypass ngrok browser warning page
+// Middleware to bypass ngrok browser warning page - MUST BE FIRST
 app.use((req, res, next) => {
     res.setHeader('ngrok-skip-browser-warning', 'true');
     next();
 });
+
+app.use(cors());
+app.use(express.json());
 
 // --- Multi-Session Management ---
 const sessions = {}; // Key: userId, Value: { client, status, qrCode, fcmToken }
