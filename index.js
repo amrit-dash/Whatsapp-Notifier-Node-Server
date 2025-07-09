@@ -24,6 +24,12 @@ const port = 3001;
 app.use(cors());
 app.use(express.json());
 
+// Middleware to bypass ngrok browser warning page
+app.use((req, res, next) => {
+    res.setHeader('ngrok-skip-browser-warning', 'true');
+    next();
+});
+
 // --- Multi-Session Management ---
 const sessions = {}; // Key: userId, Value: { client, status, qrCode, fcmToken }
 
