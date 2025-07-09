@@ -33,8 +33,8 @@ const createWhatsappSession = async (userId) => {
     const client = new Client({
         authStrategy: new LocalAuth({ clientId: userId }), // Use userId for persistent sessions
         puppeteer: {
+            headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            headless: true
         }
     });
 
@@ -232,6 +232,25 @@ app.post('/stop', authMiddleware, async (req, res) => {
         res.status(200).json({ message: 'Client session stopped successfully.' });
     } else {
         res.status(400).json({ message: 'No active session found to stop.' });
+    }
+});
+
+app.post('/set-active-device', authMiddleware, (req, res) => {
+    const userId = req.user.uid;
+    const { fcmToken } = req.body;
+
+    if (!fcmToken) {
+        return res.status(400).json({ message: 'fcmToken is required.' });
+    }
+
+    if (sessions[userId] && (sessions[userId].status === 'READY' || sessions[userId].status === 'AUTHENTICATED')) {
+        console.log(`Dynamically updating FCM token for running session of user: ${userId}`);
+        sessions[userId].fcmToken = fcmToken;
+        res.status(200).json({ message: 'Active FCM token updated for the current session.' });
+    } else {
+        // If the session isn't running, we don't need to do anything here.
+        // The new token is already saved in Firestore and will be picked up on the next /start call.
+        res.status(200).json({ message: 'Active device preference saved. It will be used on the next session start.' });
     }
 });
 
