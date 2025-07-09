@@ -25,13 +25,13 @@ const io = socketIO(server, {
 
 const port = 3001;
 
-// Middleware to bypass ngrok browser warning page - MUST BE FIRST
-app.use((req, res, next) => {
-    res.setHeader('ngrok-skip-browser-warning', 'true');
-    next();
-});
+// A more robust CORS configuration to handle preflight requests and custom headers
+app.use(cors({
+    origin: '*', // In a real production app, you'd want to restrict this to your client's domains
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
-app.use(cors());
 app.use(express.json());
 
 // --- Multi-Session Management ---
