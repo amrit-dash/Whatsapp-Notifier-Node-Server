@@ -44,7 +44,13 @@ const createWhatsappSession = async (userId) => {
         authStrategy: new LocalAuth({ clientId: userId }), // Use userId for persistent sessions
         puppeteer: {
             headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            // These args are recommended for running in a containerized environment like Render
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
         }
     });
 
