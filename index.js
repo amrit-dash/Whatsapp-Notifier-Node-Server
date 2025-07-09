@@ -17,7 +17,10 @@ const messaging = admin.messaging();
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
-    cors: { origin: "*" }
+    cors: {
+        origin: "*", // Allow all origins
+        methods: ["GET", "POST"] // Allow GET and POST methods for the handshake
+    }
 });
 
 const port = 3001;
